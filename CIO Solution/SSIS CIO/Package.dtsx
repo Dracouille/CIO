@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="4/24/2019 3:16:37 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="AMI-N-PW10-5900"
+  DTS:CreatorName="BETD\adamerval"
+  DTS:DTSID="{F32FD73D-9094-49B5-93B9-452054EB5FDB}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.1100.123"
+  DTS:LocaleID="1036"
+  DTS:ObjectName="Package"
+  DTS:PackageType="5"
+  DTS:VersionGUID="{557ABB01-D15E-4D29-BE6A-655CE4B9E174}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:Variables />
+  <DTS:Executables />
+</DTS:Executable>
