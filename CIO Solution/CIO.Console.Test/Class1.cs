@@ -10,7 +10,7 @@ using System.Linq;
 using System.Net;
 using Tool.CIO.CRM.Connect;
 
-namespace Tool.CIO
+namespace CIO.Console.Test
 {
     public class Class1
     {
@@ -40,7 +40,7 @@ namespace Tool.CIO
             }
             else
             {
-                Console.WriteLine("Failed to retrieve the version for reason: {0}",
+                System.Console.WriteLine("Failed to retrieve the version for reason: {0}",
                     RetrieveVersionResponse.ReasonPhrase);
                 throw new CrmHttpResponseException(RetrieveVersionResponse.Content);
             }
@@ -64,7 +64,7 @@ namespace Tool.CIO
         /// </summary>
         public async Task BasicCreateAndUpdatesAsync()
         {
-            Console.WriteLine("--Section 1 started--");
+            System.Console.WriteLine("--Section 1 started--");
             string queryOptions;  //select, expand and filter clauses
                                   //First create a new contact instance,  then add additional property values and update 
                                   // several properties.
@@ -80,16 +80,16 @@ namespace Tool.CIO
                 await httpClient.SendAsync(createRequest1);
             if (createResponse1.StatusCode == HttpStatusCode.NoContent)  //204
             {
-                Console.WriteLine("Contact '{0} {1}' created.",
+                System.Console.WriteLine("Contact '{0} {1}' created.",
                     contact1.GetValue("firstname"), contact1.GetValue("lastname"));
                 contact1Uri = createResponse1.Headers.
                     GetValues("OData-EntityId").FirstOrDefault();
                 entityUris.Add(contact1Uri);
-                Console.WriteLine("Contact URI: {0}", contact1Uri);
+                System.Console.WriteLine("Contact URI: {0}", contact1Uri);
             }
             else
             {
-                Console.WriteLine("Failed to create contact for reason: {0}",
+                System.Console.WriteLine("Failed to create contact for reason: {0}",
                     createResponse1.ReasonPhrase);
                 throw new CrmHttpResponseException(createResponse1.Content);
             }
@@ -108,13 +108,13 @@ namespace Tool.CIO
                 await httpClient.SendAsync(updateRequest1);
             if (updateResponse1.StatusCode == HttpStatusCode.NoContent) //204
             {
-                Console.WriteLine("Contact '{0} {1}' updated with job title" +
+                System.Console.WriteLine("Contact '{0} {1}' updated with job title" +
                     " and annual income.", contact1.GetValue("firstname"),
                     contact1.GetValue("lastname"));
             }
             else
             {
-                Console.WriteLine("Failed to update contact for reason: {0}",
+                System.Console.WriteLine("Failed to update contact for reason: {0}",
                     updateResponse1.ReasonPhrase);
                 throw new CrmHttpResponseException(updateResponse1.Content);
             }
@@ -128,7 +128,7 @@ namespace Tool.CIO
             {
                 retrievedContact1 = JsonConvert.DeserializeObject<JObject>(
                     await retrieveResponse1.Content.ReadAsStringAsync());
-                Console.WriteLine("Contact '{0}' retrieved: \n\tAnnual income: {1}" +
+                System.Console.WriteLine("Contact '{0}' retrieved: \n\tAnnual income: {1}" +
                     "\n\tJob title: {2} \n\tDescription: {3}.",
                     // Can use either indexer or GetValue method (or a mix of two)
                     retrievedContact1.GetValue("fullname"),
@@ -138,7 +138,7 @@ namespace Tool.CIO
             }
             else
             {
-                Console.WriteLine("Failed to retrieve contact for reason: {0}",
+                System.Console.WriteLine("Failed to retrieve contact for reason: {0}",
                     retrieveResponse1.ReasonPhrase);
                 throw new CrmHttpResponseException(retrieveResponse1.Content);
             }
@@ -156,14 +156,14 @@ namespace Tool.CIO
                 await httpClient.SendAsync(updateRequest2);
             if (updateResponse2.StatusCode == HttpStatusCode.NoContent)
             {
-                Console.WriteLine("Contact '{0}' updated:", retrievedContact1["fullname"]);
-                Console.WriteLine("\tJob title: {0}", contact1Update["jobtitle"]);
-                Console.WriteLine("\tAnnual income: {0}", contact1Update["annualincome"]);
-                Console.WriteLine("\tDescription: {0}", contact1Update["description"]);
+                System.Console.WriteLine("Contact '{0}' updated:", retrievedContact1["fullname"]);
+                System.Console.WriteLine("\tJob title: {0}", contact1Update["jobtitle"]);
+                System.Console.WriteLine("\tAnnual income: {0}", contact1Update["annualincome"]);
+                System.Console.WriteLine("\tDescription: {0}", contact1Update["description"]);
             }
             else
             {
-                Console.WriteLine("Failed to update contact for reason: {0}",
+                System.Console.WriteLine("Failed to update contact for reason: {0}",
                     updateResponse2.ReasonPhrase);
                 throw new CrmHttpResponseException(updateResponse2.Content);
             }
@@ -184,12 +184,12 @@ namespace Tool.CIO
                 await httpClient.SendAsync(updateRequest3);
             if (updateResponse3.StatusCode == HttpStatusCode.NoContent)
             {
-                Console.WriteLine("Contact '{0}' phone number updated.",
+                System.Console.WriteLine("Contact '{0}' phone number updated.",
                     retrievedContact1["fullname"]);
             }
             else
             {
-                Console.WriteLine("Failed to update the contact phone number for reason: {0}.",
+                System.Console.WriteLine("Failed to update the contact phone number for reason: {0}.",
                     updateResponse3.ReasonPhrase);
                 throw new CrmHttpResponseException(updateResponse3.Content);
             }
@@ -202,12 +202,12 @@ namespace Tool.CIO
             {
                 retrievedProperty1 = JsonConvert.DeserializeObject<JObject>(
                     await retrieveResponse2.Content.ReadAsStringAsync());
-                Console.WriteLine("Contact's telephone# is: {0}.",
+                System.Console.WriteLine("Contact's telephone# is: {0}.",
                     retrievedProperty1["value"]);
             }
             else
             {
-                Console.WriteLine("Failed to retrieve the contact phone number for reason: {0}.",
+                System.Console.WriteLine("Failed to retrieve the contact phone number for reason: {0}.",
                     retrieveResponse2.ReasonPhrase);
                 throw new CrmHttpResponseException(retrieveResponse2.Content);
             }
@@ -245,16 +245,16 @@ namespace Tool.CIO
                     // construct the URI.
                     contactAltUri = httpClient.BaseAddress + getVersionedWebAPIPath() + "contacts(" + createdContactAlt["contactid"] + ")";
                     entityUris.Add(contactAltUri);
-                    Console.WriteLine(
+                    System.Console.WriteLine(
                         "Contact '{0}' created: \n\tAnnual income: {1}" + "\n\tJob title: {2}",
                         createdContactAlt["fullname"],
                         createdContactAlt["annualincome"],
                         createdContactAlt["jobtitle"]);
-                    Console.WriteLine("Contact URI: {0}", contactAltUri);
+                    System.Console.WriteLine("Contact URI: {0}", contactAltUri);
                 }
                 else
                 {
-                    Console.WriteLine("Failed to create contact for reason: {0}",
+                    System.Console.WriteLine("Failed to create contact for reason: {0}",
                         createResponseAlt.ReasonPhrase);
                     throw new CrmHttpResponseException(createResponseAlt.Content);
                 }
@@ -282,7 +282,7 @@ namespace Tool.CIO
                     //Body should contain the requested updated-contact information.
                     JObject UpdatedContactAlt = JsonConvert.DeserializeObject<JObject>(
                         await updateResponseAlt.Content.ReadAsStringAsync());
-                    Console.WriteLine(
+                    System.Console.WriteLine(
                         "Contact '{0}' updated: \n\tAnnual income: {1}" + "\n\tJob title: {2}",
                         UpdatedContactAlt["fullname"],
                         UpdatedContactAlt["annualincome"],
@@ -290,7 +290,7 @@ namespace Tool.CIO
                 }
                 else
                 {
-                    Console.WriteLine("Failed to update contact for reason: {0}",
+                    System.Console.WriteLine("Failed to update contact for reason: {0}",
                         updateResponse1.ReasonPhrase);
                     throw new CrmHttpResponseException(updateResponse1.Content);
                 }
@@ -302,7 +302,7 @@ namespace Tool.CIO
         /// </summary>
         public async Task CreateWithAssociationAsync()
         {
-            Console.WriteLine("\n--Section 2 started--");
+            System.Console.WriteLine("\n--Section 2 started--");
             string queryOptions;  //select, expand and filter clauses
                                   //Create a new account and associate with existing contact in one operation. 
             account1.Add("name", "Contoso Ltd");
@@ -317,14 +317,14 @@ namespace Tool.CIO
                 await httpClient.SendAsync(createRequest2);
             if (createResponse2.StatusCode == HttpStatusCode.NoContent)
             {
-                Console.WriteLine("Account '{0}' created.", account1.GetValue("name"));
+                System.Console.WriteLine("Account '{0}' created.", account1.GetValue("name"));
                 account1Uri = createResponse2.Headers.GetValues("OData-EntityId").
                     FirstOrDefault();
                 entityUris.Add(account1Uri);
             }
             else
             {
-                Console.WriteLine("Failed to create account for reason: {0}.",
+                System.Console.WriteLine("Failed to create account for reason: {0}.",
                     createResponse2.ReasonPhrase);
                 throw new CrmHttpResponseException(createResponse2.Content);
             }
@@ -338,18 +338,18 @@ namespace Tool.CIO
             {
                 retrievedAccount1 = JsonConvert.DeserializeObject<JObject>(
                     await retrieveResponse3.Content.ReadAsStringAsync());
-                Console.WriteLine("Account '{0}' has primary contact '{1}':",
+                System.Console.WriteLine("Account '{0}' has primary contact '{1}':",
                     retrievedAccount1["name"],
                     retrievedAccount1.GetValue("primarycontactid")["fullname"]
                     );
-                Console.WriteLine("\tJob title: {0} \n\tAnnual income: {1}",
+                System.Console.WriteLine("\tJob title: {0} \n\tAnnual income: {1}",
                     retrievedAccount1.GetValue("primarycontactid")["jobtitle"],
                     retrievedAccount1["primarycontactid"]["annualincome"]
                     );
             }
             else
             {
-                Console.WriteLine("Failed to retrieve account for reason: {0}.",
+                System.Console.WriteLine("Failed to retrieve account for reason: {0}.",
                     retrieveResponse3.ReasonPhrase);
                 throw new CrmHttpResponseException(retrieveResponse3.Content);
             }
@@ -360,7 +360,7 @@ namespace Tool.CIO
         /// </summary>
         public async Task CreateRelatedAsync()
         {
-            Console.WriteLine("\n--Section 3 started--");
+            System.Console.WriteLine("\n--Section 3 started--");
             string queryOptions;  //select, expand and filter clauses
                                   //Create the following entries in one operation: an account, its 
                                   // associated primary contact, and open tasks for that contact.  These 
@@ -406,7 +406,7 @@ namespace Tool.CIO
                 await httpClient.SendAsync(createRequest3);
             if (createResponse3.StatusCode == HttpStatusCode.NoContent)
             {
-                Console.WriteLine("Account '{0}' created.",
+                System.Console.WriteLine("Account '{0}' created.",
                     account2.GetValue("name"));
                 account2Uri = createResponse3.Headers.GetValues("OData-EntityId").
                     FirstOrDefault();
@@ -414,7 +414,7 @@ namespace Tool.CIO
             }
             else
             {
-                Console.WriteLine("Failed to create account for reason: {0}.",
+                System.Console.WriteLine("Failed to create account for reason: {0}.",
                     createResponse3.ReasonPhrase);
                 throw new CrmHttpResponseException(createResponse3.Content);
             }
@@ -430,16 +430,16 @@ namespace Tool.CIO
             {
                 retrievedAccount2 = JsonConvert.DeserializeObject<JObject>(
                     await retrieveResponse4.Content.ReadAsStringAsync());
-                Console.WriteLine("Account '{0}' has primary contact '{1}':",
+                System.Console.WriteLine("Account '{0}' has primary contact '{1}':",
                     retrievedAccount2.GetValue("name"),
                     retrievedAccount2.GetValue("primarycontactid")["fullname"]);
-                Console.WriteLine("\tJob title: {0} \n\tAnnual income: {1}",
+                System.Console.WriteLine("\tJob title: {0} \n\tAnnual income: {1}",
                     retrievedAccount2["primarycontactid"]["jobtitle"],
                     retrievedAccount2["primarycontactid"]["annualincome"]);
             }
             else
             {
-                Console.WriteLine("Failed to retrieve the account/contact info for " +
+                System.Console.WriteLine("Failed to retrieve the account/contact info for " +
                     "reason: {0}.", retrieveResponse4.ReasonPhrase);
                 throw new CrmHttpResponseException(retrieveResponse4.Content);
             }
@@ -458,11 +458,11 @@ namespace Tool.CIO
             {
                 retrievedContact2 = JsonConvert.DeserializeObject<JObject>(
                     await retrieveResponse5.Content.ReadAsStringAsync());
-                Console.WriteLine("Contact '{0}' has the following assigned tasks:",
+                System.Console.WriteLine("Contact '{0}' has the following assigned tasks:",
                     retrievedContact2["fullname"]);
                 foreach (JToken tk in retrievedContact2["Contact_Tasks"])
                 {
-                    Console.WriteLine(
+                    System.Console.WriteLine(
                         "Subject: {0}, \n\tDescription: {1}\n\tStart: {2}\n\tEnd: {3}\n",
                         tk["subject"],
                         tk["description"],
@@ -473,7 +473,7 @@ namespace Tool.CIO
             }
             else
             {
-                Console.WriteLine("Failed to retrieve the contact info for reason: {0}.",
+                System.Console.WriteLine("Failed to retrieve the contact info for reason: {0}.",
                     retrieveResponse5.ReasonPhrase);
                 throw new CrmHttpResponseException(retrieveResponse5.Content);
             }
@@ -485,7 +485,7 @@ namespace Tool.CIO
         public async Task AssociateExistingAsync()
         {
             string queryOptions;  //select, expand and filter clauses
-            Console.WriteLine("\n--Section 4 started--");
+            System.Console.WriteLine("\n--Section 4 started--");
             //Add 'Peter Cambel' to the contact list of 'Fourth Coffee', 
             // a 1-to-N relationship.
             JObject rel1 = new JObject();   //relationship object for msg content
@@ -500,12 +500,12 @@ namespace Tool.CIO
                 await httpClient.SendAsync(assocRequest1);
             if (assocResponse1.StatusCode == HttpStatusCode.NoContent)
             {
-                Console.WriteLine("Contact '{0}' associated to account '{1}'.",
+                System.Console.WriteLine("Contact '{0}' associated to account '{1}'.",
                     retrievedContact1["fullname"], account2["name"]);
             }
             else
             {
-                Console.WriteLine("Failed to associate account/contact entities " +
+                System.Console.WriteLine("Failed to associate account/contact entities " +
                     "for reason: {0}.", assocResponse1.ReasonPhrase);
                 throw new CrmHttpResponseException(assocResponse1.Content);
             }
@@ -518,17 +518,17 @@ namespace Tool.CIO
             {
                 retrievedContactList1 = JsonConvert.DeserializeObject<JObject>(
                     await retrieveResponse6.Content.ReadAsStringAsync());
-                Console.WriteLine("Contact list for account '{0}':",
+                System.Console.WriteLine("Contact list for account '{0}':",
                     retrievedAccount2["name"]);
                 foreach (JToken ct in retrievedContactList1["value"])
                 {
-                    Console.WriteLine("\tName: {0}, Job title: {1}",
+                    System.Console.WriteLine("\tName: {0}, Job title: {1}",
                         ct["fullname"], ct["jobtitle"]);
                 }
             }
             else
             {
-                Console.WriteLine("Failed to retrieve the account/contact info" +
+                System.Console.WriteLine("Failed to retrieve the account/contact info" +
                     " for reason: {0}.", retrieveResponse6.ReasonPhrase);
                 throw new CrmHttpResponseException(retrieveResponse6.Content);
             }
@@ -545,12 +545,12 @@ namespace Tool.CIO
                 await httpClient.DeleteAsync(dis1Uri);
             if (disassocResponse1.StatusCode == HttpStatusCode.NoContent)
             {
-                Console.WriteLine("Contact '{0}' dissociated from account '{1}'.",
+                System.Console.WriteLine("Contact '{0}' dissociated from account '{1}'.",
                     retrievedContact1["fullname"], account2["name"]);
             }
             else
             {
-                Console.WriteLine("Failed to disassociate entities for reason: {0}.",
+                System.Console.WriteLine("Failed to disassociate entities for reason: {0}.",
                     disassocResponse1.ReasonPhrase);
                 throw new CrmHttpResponseException(disassocResponse1.Content);
             }
@@ -574,14 +574,14 @@ namespace Tool.CIO
                 await httpClient.SendAsync(createRequest4);
             if (createResponse4.StatusCode == HttpStatusCode.NoContent)
             {
-                Console.WriteLine("Competitor '{0}' created.", comp1["name"]);
+                System.Console.WriteLine("Competitor '{0}' created.", comp1["name"]);
                 comp1Uri = createResponse4.Headers.GetValues("OData-EntityId").
                     FirstOrDefault();
                 entityUris.Add(comp1Uri);
             }
             else
             {
-                Console.WriteLine("Failed to create competitor for reason: {0}",
+                System.Console.WriteLine("Failed to create competitor for reason: {0}",
                     createResponse4.ReasonPhrase);
                 throw new CrmHttpResponseException(createResponse4.Content);
             }
@@ -594,14 +594,14 @@ namespace Tool.CIO
                 await httpClient.SendAsync(createRequest5);
             if (createResponse5.StatusCode == HttpStatusCode.NoContent)
             {
-                Console.WriteLine("Opportunity '{0}' created.", oppor1["name"]);
+                System.Console.WriteLine("Opportunity '{0}' created.", oppor1["name"]);
                 oppor1Uri = createResponse5.Headers.GetValues("OData-EntityId").
                     FirstOrDefault();
                 entityUris.Add(oppor1Uri);
             }
             else
             {
-                Console.WriteLine("Failed to create opportunity for reason: {0}",
+                System.Console.WriteLine("Failed to create opportunity for reason: {0}",
                     createResponse5.ReasonPhrase);
                 throw new CrmHttpResponseException(createResponse5.Content);
             }
@@ -620,13 +620,13 @@ namespace Tool.CIO
                 await httpClient.SendAsync(assocRequest2);
             if (assocResponse2.StatusCode == HttpStatusCode.NoContent)
             {
-                Console.WriteLine(
+                System.Console.WriteLine(
                     "Opportunity '{0}' associated with competitor '{1}'.",
                     oppor1["name"], comp1["name"]);
             }
             else
             {
-                Console.WriteLine("Failed to associate competitor/opportunity" +
+                System.Console.WriteLine("Failed to associate competitor/opportunity" +
                     "entities for reason: {0}.", assocResponse2.ReasonPhrase);
                 throw new CrmHttpResponseException(assocResponse2.Content);
             }
@@ -642,18 +642,18 @@ namespace Tool.CIO
             {
                 retrievedOpporList1 = JsonConvert.DeserializeObject<JObject>(
                     await retrieveResponse7.Content.ReadAsStringAsync());
-                Console.WriteLine("Competitor '{0}' has the following opportunities:",
+                System.Console.WriteLine("Competitor '{0}' has the following opportunities:",
                     retrievedOpporList1["name"]);
                 foreach (JToken op in
                     retrievedOpporList1["opportunitycompetitors_association"])
                 {
-                    Console.WriteLine("\tName: {0}, \n\tDescription: {1}",
+                    System.Console.WriteLine("\tName: {0}, \n\tDescription: {1}",
                         op["name"], op["description"]);
                 }
             }
             else
             {
-                Console.WriteLine("Failed to retrieve the competitor/opportunity"
+                System.Console.WriteLine("Failed to retrieve the competitor/opportunity"
                     + " info for reason: {0}.",
                     retrieveResponse7.ReasonPhrase);
                 throw new CrmHttpResponseException(retrieveResponse7.Content);
@@ -665,13 +665,13 @@ namespace Tool.CIO
                 await httpClient.DeleteAsync(dis2Uri);
             if (disassocResponse2.StatusCode == HttpStatusCode.NoContent)
             {
-                Console.WriteLine(
+                System.Console.WriteLine(
                     "Opportunity '{0}' disassociated from competitor '{1}'.",
                     oppor1["name"], comp1["name"]);
             }
             else
             {
-                Console.WriteLine("Failed to disassociate entities for reason: {0}.",
+                System.Console.WriteLine("Failed to disassociate entities for reason: {0}.",
                     disassocResponse1.ReasonPhrase);
                 throw new CrmHttpResponseException(disassocResponse1.Content);
             }
@@ -696,11 +696,11 @@ namespace Tool.CIO
             finally
             {
                 #region Section 5: Delete sample entities 
-                Console.WriteLine("\n--Section 5 started--");
+                System.Console.WriteLine("\n--Section 5 started--");
                 //Delete all the created sample entities.  Note that explicit deletion is not required 
                 // for contact tasks because these are automatically cascade-deleted with owner. 
-                Console.Write("\nDo you want these entity records deleted? (y/n) [y]: ");
-                String answer = Console.ReadLine();
+                System.Console.Write("\nDo you want these entity records deleted? (y/n) [y]: ");
+                String answer = System.Console.ReadLine();
                 answer = answer.Trim();
                 if (!(answer.StartsWith("y") || answer.StartsWith("Y") || answer == String.Empty))
                 { entityUris.Clear(); }
@@ -713,23 +713,23 @@ namespace Tool.CIO
                     deleteResponse1 = await httpClient.DeleteAsync(ent);
                     if (deleteResponse1.IsSuccessStatusCode) //200-299
                     {
-                        Console.WriteLine("Entity deleted: \n{0}.", ent);
+                        System.Console.WriteLine("Entity deleted: \n{0}.", ent);
                         successCnt++;
                     }
                     else if (deleteResponse1.StatusCode == HttpStatusCode.NotFound) //404
                     {
                         //May have been deleted by another user or via cascade operation
-                        Console.WriteLine("Entity not found: {0}.", ent);
+                        System.Console.WriteLine("Entity not found: {0}.", ent);
                         notFoundCnt++;
                     }
                     else
                     {
-                        Console.WriteLine("Failed to delete: {0}.", ent);
+                        System.Console.WriteLine("Failed to delete: {0}.", ent);
                         failCnt++;
                         lastBadResponseContent = deleteResponse1.Content;
                     }
                 }
-                Console.WriteLine("Entities deleted: {0}, not found: {1}, delete " +
+                System.Console.WriteLine("Entities deleted: {0}, not found: {1}, delete " +
                     "failures: {2}. \n", successCnt, notFoundCnt, failCnt);
                 entityUris.Clear();
                 if (failCnt > 0)
@@ -755,8 +755,8 @@ namespace Tool.CIO
             {
                 if (app.httpClient != null)
                 { app.httpClient.Dispose(); }
-                Console.WriteLine("Press <Enter> to exit the program.");
-                Console.ReadLine();
+                System.Console.WriteLine("Press <Enter> to exit the program.");
+                System.Console.ReadLine();
             }
         }
 
@@ -792,11 +792,11 @@ namespace Tool.CIO
         /// <summary> Helper method to display caught exceptions </summary>
         private static void DisplayException(Exception ex)
         {
-            Console.WriteLine("The application terminated with an error.");
-            Console.WriteLine(ex.Message);
+            System.Console.WriteLine("The application terminated with an error.");
+            System.Console.WriteLine(ex.Message);
             while (ex.InnerException != null)
             {
-                Console.WriteLine("\t* {0}", ex.InnerException.Message);
+                System.Console.WriteLine("\t* {0}", ex.InnerException.Message);
                 ex = ex.InnerException;
             }
         }
