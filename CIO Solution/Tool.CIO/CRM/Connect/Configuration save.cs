@@ -54,19 +54,6 @@ namespace Tool.CIO.CRM.Connect
 
         public Configuration() { }
 
-        public Configuration(string Login, string Pwd, string URL, string AzureID, string Redirect)
-        {
-            Username = Login;
-            ServiceUrl = URL;
-            ClientId = AzureID;
-            RedirectUrl = Redirect;
-            Domain = "";
-
-            var password = Pwd;
-            Password = new SecureString();
-            foreach (char c in password) Password.AppendChar(c);
-        }
-
         #endregion Constructors
     }
 
@@ -80,17 +67,41 @@ namespace Tool.CIO.CRM.Connect
         #endregion Properties
 
         #region Constructors
-        public FileConfiguration() : base() { }
-        public FileConfiguration(string Login, string Pwd, string URL, string AzureID, string Redirect) : base(Login, Pwd, URL, AzureID, Redirect) { }
-        public FileConfiguration(string name) : base()
+        public FileConfiguration()
+            : base()
+        { }
+
+        /// <summary>
+        /// Loads a named connection string and application settings from persistent file storage.
+        /// The configuration file must have the same name as the application and be located in the 
+        /// run-time folder.
+        /// </summary>
+        /// <param name="name">The name of the target connection string. An empty or null string value 
+        /// results in the first named configuration being used.</param>
+        /// <remarks>The app.config file must exist in the run-time folder and have the name
+        /// <appname>.exe.config. To specify an app.config file path, use the Load() method.</remarks>
+        public FileConfiguration(string name)
+            : base()
         {
             var path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), Environment.GetCommandLineArgs()[0]);
 
             Load(name, String.Concat(path, ".config"));
         }
+
         #endregion Constructors
 
         #region Methods
+        /// <summary>
+        /// Loads server connection information and application settings from persistent file storage.
+        /// </summary>
+        /// <remarks>A setting named OverrideConfig can optionally be added. If a config file that this setting
+        /// refers to exists, that config file is read instead of the config file specified in the path parameter.
+        /// This allows for an alternate config file, for example a global config file shared by multiple applications.
+        /// </summary>
+        /// <param name="connectionName">The name of the connection string in the configuration file to use. 
+        /// Each CRM organization can have its own connection string. A value of null or String.Empty results
+        /// in the first (top most) connection string being used.</param>
+        /// <param name="path">The full or relative pathname of the configuration file.</param>
         public virtual void Load(string connectionName, string path)
         {
             // Check passed parameters.
@@ -108,6 +119,18 @@ namespace Tool.CIO.CRM.Connect
                 config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
 
                 var appSettings = config.AppSettings.Settings;
+
+                // If an alternate config file exists, load that configuration instead. Note the test
+                // for redirectTo.Equals(path) to avoid an infinite loop.
+                if (appSettings["AlternateConfig"] != null)
+                {
+                    var redirectTo = appSettings["AlternateConfig"].Value;
+                    if (redirectTo != null && !redirectTo.Equals(path) && System.IO.File.Exists(redirectTo))
+                    {
+                        Load(connectionName, redirectTo);
+                        return;
+                    }
+                }
 
                 // Get the connection string.
                 ConnectionStringSettings connection;
@@ -160,11 +183,20 @@ namespace Tool.CIO.CRM.Connect
             }
         }
 
+        /// <summary>
+        /// Save the current configuration to persistent file storage.
+        /// </summary>
+        /// <remarks>Any existing configuration is overwritten.</remarks>
         public virtual void Save()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Add a named connection string to persistent file storage.
+        /// </summary>
+        /// <remarks>A named connection string from the current configuration is added to an existing
+        /// configuration file./remarks>
         public virtual void AddConnection()
         {
             throw new NotImplementedException();

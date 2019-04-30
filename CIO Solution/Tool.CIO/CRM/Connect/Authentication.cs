@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,7 +9,7 @@ using System.Net.Http.Headers;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-
+using Tools.CIO.Tools;
 
 namespace Tool.CIO.CRM.Connect
 {
@@ -108,7 +109,6 @@ namespace Tool.CIO.CRM.Connect
         /// token expiration.</remarks>
         public AuthenticationResult AcquireToken(string username, SecureString password)
         {
-
             try
             {
                 if (!string.IsNullOrEmpty(username) && password != null)
@@ -132,11 +132,15 @@ namespace Tool.CIO.CRM.Connect
         /// if the authority cannot be discovered.</returns>
         public static string DiscoverAuthority(string serviceUrl)
         {
+
+            string filePath = @"C:\Users\adamerval\Documents\Error.txt";
+
             try
             {
-                AuthenticationParameters ap = AuthenticationParameters.CreateFromResourceUrlAsync(
-                    new Uri(serviceUrl + "api/data/")).Result;
-
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                AuthenticationParameters ap = AuthenticationParameters.CreateFromResourceUrlAsync(new Uri(serviceUrl + "api/data/")).Result;
+                Console.WriteLine(ap.Resource);
+                Console.WriteLine(ap.Authority);
                 return ap.Authority;
             }
             catch (HttpRequestException e)
@@ -145,6 +149,23 @@ namespace Tool.CIO.CRM.Connect
             }
             catch (System.Exception e)
             {
+
+                using (StreamWriter writer = new StreamWriter(filePath, true))
+                {
+                    writer.WriteLine("-----------------------------------------------------------------------------");
+                    writer.WriteLine("Date : " + DateTime.Now.ToString());
+                    writer.WriteLine();
+
+                    while (e != null)
+                    {
+                        writer.WriteLine(e.GetType().FullName);
+                        writer.WriteLine("Message : " + e.Message);
+                        writer.WriteLine("StackTrace : " + e.StackTrace);
+
+                        e = e.InnerException;
+                    }
+                }
+
                 // This exception ocurrs when the service is not configured for OAuth.
                 if (e.HResult == -2146233088)
                 {

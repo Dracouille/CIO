@@ -12,7 +12,7 @@ using Tool.CIO.CRM.Connect;
 
 namespace CIO.Console.Test
 {
-    public class Class1
+    public class Class11
     {
         //Provides a persistent client-to-CRM server communication channel.
         private HttpClient httpClient;
@@ -743,7 +743,7 @@ namespace CIO.Console.Test
 
         static public void Main(string[] args)
         {
-            Class1 app = new Class1();
+            Class11 app = new Class11();
             try
             {
                 //Read configuration file and connect to specified CRM server.
@@ -760,23 +760,29 @@ namespace CIO.Console.Test
             }
         }
 
-        /// <summary>
-        /// Obtains the connection information from the application's configuration file, then 
-        /// uses this info to connect to the specified CRM service.
-        /// </summary>
-        /// <param name="args"> Command line arguments. The first specifies the name of the 
-        ///  connection string setting. </param>
         private void ConnectToCRM(string[] cmdargs)
         {
-            //Create a helper object to read app.config for service URL and application 
-            // registration settings.
+            //Décla de la Config
             Configuration config = null;
-            if (cmdargs.Length > 0)
-            { config = new FileConfiguration(cmdargs[0]); }
-            else
-            { config = new FileConfiguration(null); }
+
+            //Varibales de connexion TEST
+            string Login = "antonin.damerval@businessdecision.com";
+            string Pwd = "Monaco0419*";
+            string URL = "https://businessdecision.crm4.dynamics.com/";
+            string AzureID = "d099a944-a49b-4fd2-a66c-74c80a3fb5ac";
+            string Redirect = "https://businessdecision.crm4.dynamics.com/api/data/v9.0";
+
+            //Appel de la Config
+            if (cmdargs.Length > 0){
+                config = new FileConfiguration(cmdargs[0]);
+            }
+            else {
+                config = new FileConfiguration(Login, Pwd, URL, AzureID, Redirect);
+            }
+            
             //Create a helper object to authenticate the user with this connection info.
             Authentication auth = new Authentication(config);
+            
             //Next use a HttpClient object to connect to specified CRM Web service.
             httpClient = new HttpClient(auth.ClientHandler, true);
             //Define the Web API base address, the max period of execute time, the 
