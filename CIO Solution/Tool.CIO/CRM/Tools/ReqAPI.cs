@@ -16,27 +16,24 @@ namespace Tool.CIO.CRM.Tools
         private HttpResponseMessage RetrieveGetReponse;
 
         //Récup les contacts
-        public async Task GetContact(HttpClient p_httpClient, string VersionApi)
+        public async Task<ListContact> GetContact(ConnectionCRM Co)
         {
             // Requete des 3 premiers contacts
-            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, VersionApi + "contacts?$top=3");
+            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "contacts?$top=3");
             
-            // wait for send a request
-            RetrieveGetReponse = await p_httpClient.SendAsync(RetrieveGetRequest); 
+            // Attend la reception
+            RetrieveGetReponse = await Co.GetHTTPClient().SendAsync(RetrieveGetRequest); 
 
             if (RetrieveGetReponse.IsSuccessStatusCode) // if 200, successfully 
             {
-                JObject ReponseContacts = JsonConvert.DeserializeObject<JObject>(await RetrieveGetReponse.Content.ReadAsStringAsync()); //Translate a Content of Request Response to Json Object
-                ListContact result = JsonConvert.DeserializeObject<ListContact>(ReponseContacts.ToString()); // store a value choise in Cantact with JsonProperty in a member value of contacts
-
-                foreach (var value in result.GetPerson) // and use this value in member
-                {
-                    Console.WriteLine("Nom : " + value.m_lastname);
-                    Console.WriteLine("Prenom : " + value.m_firstname);
-                    Console.WriteLine("Situation : " + value.m_jobe);
-                }
-
-                //return (result); 
+                //Translate a Content of Request Response to Json Object
+                JObject ReponseContacts = JsonConvert.DeserializeObject<JObject>(await RetrieveGetReponse.Content.ReadAsStringAsync());
+                
+                // Store values choise in ListContact with JsonProperty in a member value of contacts
+                ListContact result = JsonConvert.DeserializeObject<ListContact>(ReponseContacts.ToString()); 
+                
+                //Retourne la liste
+                return (result); 
             }
             else
             {
@@ -44,5 +41,33 @@ namespace Tool.CIO.CRM.Tools
                 throw new CrmHttpResponseException(RetrieveGetReponse.Content);
             }
         }
+
+        //Récup Susan Burk
+        public async Task<ListContact> GetContactTest(ConnectionCRM Co)
+        {
+            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "ioc_roles?userQuery=00000000-0000-0000-00aa-000010001899");
+
+            // wait for send a request
+            RetrieveGetReponse = await Co.GetHTTPClient().SendAsync(RetrieveGetRequest);
+
+            if (RetrieveGetReponse.IsSuccessStatusCode) // if 200, successfully 
+            {
+                //Translate a Content of Request Response to Json Object
+                JObject ReponseContacts = JsonConvert.DeserializeObject<JObject>(await RetrieveGetReponse.Content.ReadAsStringAsync());
+
+                // Store values choise in ListContact with JsonProperty in a member value of contacts
+                ListContact result = JsonConvert.DeserializeObject<ListContact>(ReponseContacts.ToString());
+
+                //Retourne la liste
+                return (result);
+            }
+            else
+            {
+                Console.WriteLine("Echec Récup Contact : {0}", RetrieveGetReponse.ReasonPhrase);
+                throw new CrmHttpResponseException(RetrieveGetReponse.Content);
+            }
+        }
+
+
     }
 }

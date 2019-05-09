@@ -48,19 +48,22 @@ namespace Tool.CIO.CRM.Connect
         /// <remarks>Required only with a web service configured for Active Directory authentication.</remarks>
         public string Domain { get; set; }
 
+        public string SecretKey { get; set; }
+
         #endregion Properties
 
         #region Constructors
 
         public Configuration() { }
 
-        public Configuration(string Login, string Pwd, string URL, string AzureID, string Redirect)
+        public Configuration(string Login, string Pwd, string URL, string AzureID, string Redirect, string p_SecretKey)
         {
             Username = Login;
             ServiceUrl = URL;
             ClientId = AzureID;
             RedirectUrl = Redirect;
-            Domain = "";
+            Domain = "Olimpico.biz";
+            SecretKey = p_SecretKey;
 
             var password = Pwd;
             Password = new SecureString();
@@ -81,7 +84,7 @@ namespace Tool.CIO.CRM.Connect
 
         #region Constructors
         public FileConfiguration() : base() { }
-        public FileConfiguration(string Login, string Pwd, string URL, string AzureID, string Redirect) : base(Login, Pwd, URL, AzureID, Redirect) { }
+        public FileConfiguration(string Login, string Pwd, string URL, string AzureID, string Redirect, string SecretKey) : base(Login, Pwd, URL, AzureID, Redirect, SecretKey) { }
         public FileConfiguration(string name) : base()
         {
             var path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), Environment.GetCommandLineArgs()[0]);

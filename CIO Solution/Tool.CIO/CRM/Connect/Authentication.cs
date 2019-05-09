@@ -91,8 +91,15 @@ namespace Tool.CIO.CRM.Connect
         {
             if (_config != null && (!string.IsNullOrEmpty(_config.Username) && _config.Password != null))
             {
-                UserPasswordCredential cred = new UserPasswordCredential(_config.Username, _config.Password);
-                return _context.AcquireTokenAsync(_config.ServiceUrl, _config.ClientId, cred).Result;
+                // WebAPP
+                ClientCredential CliCredential = new ClientCredential(_config.ClientId, _config.SecretKey);
+                var result = _context.AcquireTokenAsync(_config.ServiceUrl, CliCredential).Result;
+
+                //Native
+                //UserPasswordCredential cred = new UserPasswordCredential(_config.Username, _config.Password);
+                //var result = _context.AcquireTokenAsync(_config.ServiceUrl, _config.ClientId, cred).Result;
+
+                return result;
             }
             // return _context.AcquireTokenAsync(_config.ServiceUrl, _config.ClientId, new Uri(_config.RedirectUrl), PromptBehavior.Auto);
             return _context.AcquireTokenAsync(_config.ServiceUrl, _config.ClientId, new Uri(_config.RedirectUrl), null).Result;
@@ -132,15 +139,11 @@ namespace Tool.CIO.CRM.Connect
         /// if the authority cannot be discovered.</returns>
         public static string DiscoverAuthority(string serviceUrl)
         {
-
-            string filePath = @"C:\Users\adamerval\Documents\Error.txt";
-
             try
             {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                //Passage en TLS 12 OBLIGATOIRE
+                //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 AuthenticationParameters ap = AuthenticationParameters.CreateFromResourceUrlAsync(new Uri(serviceUrl + "api/data/")).Result;
-                Console.WriteLine(ap.Resource);
-                Console.WriteLine(ap.Authority);
                 return ap.Authority;
             }
             catch (HttpRequestException e)
@@ -149,23 +152,6 @@ namespace Tool.CIO.CRM.Connect
             }
             catch (System.Exception e)
             {
-
-                using (StreamWriter writer = new StreamWriter(filePath, true))
-                {
-                    writer.WriteLine("-----------------------------------------------------------------------------");
-                    writer.WriteLine("Date : " + DateTime.Now.ToString());
-                    writer.WriteLine();
-
-                    while (e != null)
-                    {
-                        writer.WriteLine(e.GetType().FullName);
-                        writer.WriteLine("Message : " + e.Message);
-                        writer.WriteLine("StackTrace : " + e.StackTrace);
-
-                        e = e.InnerException;
-                    }
-                }
-
                 // This exception ocurrs when the service is not configured for OAuth.
                 if (e.HResult == -2146233088)
                 {
@@ -193,8 +179,7 @@ namespace Tool.CIO.CRM.Connect
                 _auth = auth;
             }
 
-            protected override Task<HttpResponseMessage> SendAsync(
-                HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
+            protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
             {
                 // It is a best practice to refresh the access token before every message request is sent. Doing so
                 // avoids having to check the expiration date/time of the token. This operation is quick.

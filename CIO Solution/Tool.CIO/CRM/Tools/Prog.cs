@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using Tool.CIO.CRM.Connect;
 using Tool.CIO.CRM.Tools;
+using Tool.CIO.Log;
 
 namespace Tools.CIO.Tools
 {
@@ -17,20 +18,23 @@ namespace Tools.CIO.Tools
     {
         //Provides a persistent client-to-CRM server communication channel.
         private HttpClient httpClient;
-        ApiVersion apiVersion = new ApiVersion();
         ListContact Contacts = new ListContact();
-            
+        ConnectionCRM Co = new ConnectionCRM("antonin.damerval@businessdecision.com", "Monaco0419*", "https://businessdecision.crm4.dynamics.com/", "d099a944-a49b-4fd2-a66c-74c80a3fb5ac", "https://businessdecision.crm4.dynamics.com/api/data/v9.0", "Z139u@]Ns/?JvYJWm3H2ZiLWJQ+=ee6Y");
+        DisplayErr Err = new DisplayErr();
 
         //Test SSIS
-        public ListContact Lance()
+        public string Lance()
         {
+            //Déclare une nouvelle requete
             ReqAPI ReqContact = new ReqAPI();
+
             try
             {
-                ConnectToCRM();
+                //Ouvre la connexion
+                httpClient = Co.GetHTTPClient();
                 Task.WaitAll(Task.Run(async () => await RunAsync(ReqContact)));
             }
-            catch (System.Exception ex) { DisplayException(ex); }
+            catch (System.Exception ex) { Err.DisplayException(ex); }
             finally
             {
                 if (httpClient != null)
@@ -38,7 +42,14 @@ namespace Tools.CIO.Tools
                     httpClient.Dispose();
                 }
             }
-            return(Contacts);
+            return(Contacts.GetPerson[0].m_firstname);
+        }
+
+        //Lance la récupération pour la connexion au serveur
+        public void RecupConfig()
+        {
+            Co.ConnectToCRM(Err);
+            Task.WaitAll(Task.Run(async () => await Co.RunAsyncApiVersion(Err)));
         }
 
         //Appel les methodes en Asynk
@@ -46,75 +57,12 @@ namespace Tools.CIO.Tools
         {
             try
             {
-                await apiVersion.ReqApiVersion(httpClient);
-                await Client.GetContact(httpClient, apiVersion.getVersionAPI()); // Sending a request
+                Contacts = await Client.GetContact(Co); // Sending a request
             }
             catch (Exception ex)
-            { DisplayException(ex); }
+            { Err.DisplayException(ex); }
         }
 
-        //Main
-        static public void Main(string[] args)
-        {
-            Prog app = new Prog();
-            ReqAPI Client = new ReqAPI();
-            
-            try
-            {
-                app.ConnectToCRM();
-                Task.WaitAll(Task.Run(async () => await app.RunAsync(Client)));
-            }
-            catch (System.Exception ex) { DisplayException(ex); }
-            finally
-            {
-                if (app.httpClient != null)
-                { app.httpClient.Dispose(); }
-                System.Console.WriteLine("Press <Enter> to exit the program.");
-                System.Console.ReadLine();
-            }
-        }
-
-        //Intancie httpClient
-        private void ConnectToCRM()
-        {
-            //Décla de la Config
-            Configuration config = null;
-
-            //Varibales de connexion TEST
-            string Login = "antonin.damerval@businessdecision.com";
-            string Pwd = "Monaco0419*";
-            string URL = "https://businessdecision.crm4.dynamics.com/";
-            string AzureID = "d099a944-a49b-4fd2-a66c-74c80a3fb5ac";
-            string Redirect = "https://businessdecision.crm4.dynamics.com/api/data/v9.0";
-
-            //Appel la config
-            config = new FileConfiguration(Login, Pwd, URL, AzureID, Redirect);
-
-
-            //Décla Auth, use a HttpClient object to connect to specified CRM Web service.
-            Authentication auth = new Authentication(config);
-            httpClient = new HttpClient(auth.ClientHandler, true);
-
-            //Define the Web API base address, the max period of execute time, the 
-            // default OData version, and the default response payload format.
-            httpClient.BaseAddress = new Uri(config.ServiceUrl + "api/data/");
-            httpClient.Timeout = new TimeSpan(0, 2, 0);
-            httpClient.DefaultRequestHeaders.Add("OData-MaxVersion", "4.0");
-            httpClient.DefaultRequestHeaders.Add("OData-Version", "4.0");
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        }
-
-        /// <summary> Helper method to display caught exceptions </summary>
-        private static void DisplayException(Exception ex)
-        {
-            System.Console.WriteLine("The application terminated with an error.");
-            System.Console.WriteLine(ex.Message);
-            while (ex.InnerException != null)
-            {
-                System.Console.WriteLine("\t* {0}", ex.InnerException.Message);
-                ex = ex.InnerException;
-            }
-        }
     }
 }
 
