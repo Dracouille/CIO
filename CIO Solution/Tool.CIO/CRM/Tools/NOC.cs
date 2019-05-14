@@ -1,106 +1,64 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Tool.CIO.CRM.Connect;
 
 namespace Tool.CIO.CRM.Tools
 {
     public class NOC
     {
-        [JsonProperty(PropertyName = "_EVENTID")]
-        public long m_EventID { get; set; }
+        [JsonProperty(PropertyName = "ioc_foundingdateorg")]
+        public string m_CreationDate { get; set; }
 
-        [JsonProperty(PropertyName = "_TYPE")]
-        public string m_Type { get; set; }
-
-        [JsonProperty(PropertyName = "_LNG")]
-        public decimal m_LNG { get; set; }
-
-        [JsonProperty(PropertyName = "IDIOCDF")]
-        public long m_IDIOCDF { get; set; }
-
-        [JsonProperty(PropertyName = "NOCCode")]
-        public string m_NOCCode { get; set; }
-
-        [JsonProperty(PropertyName = "Name")]
-        public string m_Name { get; set; }
-
-        [JsonProperty(PropertyName = "NOCAddress")]
-        public string m_NOCAddress { get; set; }
-
-        [JsonProperty(PropertyName = "NOCTelephone")]
-        public string m_NOCTelephone { get; set; }
-
-        [JsonProperty(PropertyName = "NOCFax")]
-        public string m_NOCFax { get; set; }
-
-        [JsonProperty(PropertyName = "NOCEmail")]
-        public string m_NOCEmail { get; set; }
-
-        [JsonProperty(PropertyName = "IDENTITYCARDEMAIL_LINKURL")]
-        public string m_IDENTITYCARDEMAIL_LINKURL { get; set; }
-
-        [JsonProperty(PropertyName = "IDENTITYCARDEMAIL_LINKTOOLTIP")]
-        public string m_IDENTITYCARDEMAIL_LINKTOOLTIP { get; set; }
-
-        [JsonProperty(PropertyName = "NOCOfficialName")]
-        public string m_NOCOfficialName { get; set; }
-
-        [JsonProperty(PropertyName = "NOCWebsite")]
-        public string m_NOCWebsite { get; set; }
-
-        [JsonProperty(PropertyName = "IDENTITYCARDWEBSITE_LINKTOOLTIP")]
-        public string m_IDENTITYCARDWEBSITE_LINKTOOLTIP { get; set; }
-
-        [JsonProperty(PropertyName = "CreationDate")]
-        public DateTime m_CreationDate { get; set; }
-
-        [JsonProperty(PropertyName = "RecognitionDate")]
+        [JsonProperty(PropertyName = "ioc_iocrecognition")]
         public string m_RecognitionDate { get; set; }
 
-        [JsonProperty(PropertyName = "NOCFirstRepresentativeTitle")]
-        public string m_NOCFirstRepresentativeTitle { get; set; }
+        [JsonProperty(PropertyName = "name")]
+        public string m_Name { get; set; }
 
-        [JsonProperty(PropertyName = "NOCSecondRepresentativeTitle")]
-        public string m_NOCSecondRepresentativeTitle { get; set; }
+        [JsonProperty(PropertyName = "ioc_entitynamefr")]
+        public string m_NameFR { get; set; }
 
-        [JsonProperty(PropertyName = "NOCFirstRepresentativePerson")]
-        public string m_NOCFirstRepresentativePerson { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdressbuildingname")]
+        public string m_AddressBuilding { get; set; }
 
-        [JsonProperty(PropertyName = "NOCSecondRepresentativePerson")]
-        public string m_NOCSecondRepresentativePerson { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdressstreet")]
+        public string m_AdressStreet { get; set; }
 
-        [JsonProperty(PropertyName = "IDENTITYCARDCOUNTRYWEBSITEICONIMAGEURL")]
-        public string m_IDENTITYCARDCOUNTRYWEBSITEICONIMAGEURL { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdresscomplement")]
+        public string m_AdressComplement { get; set; }
 
-        [JsonProperty(PropertyName = "IDENTITYCARDCOUNTRYWEBSITEICONALTTEXT")]
-        public string m_IDENTITYCARDCOUNTRYWEBSITEICONALTTEXT { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdresspostalcode")]
+        public string m_AdressPostalCode { get; set; }
 
-        [JsonProperty(PropertyName = "IDENTITYCARDCOUNTRYWEBSITEICONIMAGETITLE")]
-        public string m_IDENTITYCARDCOUNTRYWEBSITEICONIMAGETITLE { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdresscity")]
+        public string m_AdressCity { get; set; }
 
-        [JsonProperty(PropertyName = "IDENTITYCARDCOUNTRYWEBSITELINKLINKTEXT")]
-        public string m_IDENTITYCARDCOUNTRYWEBSITELINKLINKTEXT { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdressstate")]
+        public string m_AdressState { get; set; }
 
-        [JsonProperty(PropertyName = "IDENTITYCARDCOUNTRYWEBSITELINKLINKURL")]
-        public string m_IDENTITYCARDCOUNTRYWEBSITELINKLINKURL { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdressstateinitial")]
+        public string m_AdressStateInitial { get; set; }
 
-        [JsonProperty(PropertyName = "IDENTITYCARDCOUNTRYWEBSITELINKLINKTOOLTIP")]
-        public string m_IDENTITYCARDCOUNTRYWEBSITELINKLINKTOOLTIP { get; set; }
+        [JsonProperty(PropertyName = "ioc_proftel1")]
+        public string m_NOCTelephone { get; set; }
 
-        [JsonProperty(PropertyName = "__NOC")]
-        public string m_NOC { get; set; }
+        [JsonProperty(PropertyName = "ioc_fax1")]
+        public string m_NOCFax { get; set; }
 
-        [JsonProperty(PropertyName = "OLYMPICGAMES")]
-        public string m_OLYMPICGAMES { get; set; }
+        [JsonProperty(PropertyName = "ioc_noccode")]
+        public string m_NOCCode { get; set; }
 
-        [JsonProperty(PropertyName = "PAGEID")]
-        public ulong m_PAGEID { get; set; }
+        [JsonProperty(PropertyName = "websiteurl")]
+        public string m_NOCWebsite { get; set; }
 
-        [JsonProperty(PropertyName = "PAGEGUID")]
-        public int m_PAGEGUID { get; set; }
+        [JsonProperty(PropertyName = "ioc_institutionalemblem")]
+        public string m_Emblem { get; set; }
+
+        //@odata.etag, accountid, _ioc_postaladdresscountryid_value ??
     }
 
     public class ListNOC
@@ -113,4 +71,40 @@ namespace Tool.CIO.CRM.Tools
         [JsonProperty(PropertyName = "value")]
         public List<NOC> GetNOC { get; set; }
     }
+
+    public class ReqNOC
+    {
+        private HttpRequestMessage RetrieveGetRequest;
+        private HttpResponseMessage RetrieveGetReponse;
+
+        //Récup les contacts
+        public async Task<ListNOC> GetNOC(ConnectionCRM Co)
+        {
+            // Requete des NOC
+            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "accounts?userQuery=6a9f7b9a-5675-e911-a81f-000d3a47cb1d");
+            //RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "accounts?$top=3");
+
+            // Attend la reception
+            RetrieveGetReponse = await Co.GetHTTPClient().SendAsync(RetrieveGetRequest);
+
+            if (RetrieveGetReponse.IsSuccessStatusCode) // if 200, successfully 
+            {
+                //Translate a Content of Request Response to Json Object
+                JObject ReponseContacts = JsonConvert.DeserializeObject<JObject>(await RetrieveGetReponse.Content.ReadAsStringAsync());
+
+                // Store values choise in ListNOC with JsonProperty in a member value of contacts
+                ListNOC result = JsonConvert.DeserializeObject<ListNOC>(ReponseContacts.ToString());
+
+                //Retourne la liste
+                return (result);
+            }
+            else
+            {
+                //LOG
+                Console.WriteLine("Echec Récup NOC : {0}", RetrieveGetReponse.ReasonPhrase);
+                throw new CrmHttpResponseException(RetrieveGetReponse.Content);
+            }
+        }
+    }
+
 }

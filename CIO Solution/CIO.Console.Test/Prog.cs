@@ -8,63 +8,100 @@ namespace Tools.CIO.Tools
 {
     public class Toto
     {
-        //Provides a persistent client-to-CRM server communication channel.
-        ListContact Contacts = new ListContact();
         //ConnectionCRM Co = new ConnectionCRM("antonin.damerval@businessdecision.com", "Monaco0419*", "https://businessdecision.crm4.dynamics.com/", "d099a944-a49b-4fd2-a66c-74c80a3fb5ac", "https://businessdecision.crm4.dynamics.com/api/data/v9.0");
-        ConnectionCRM Co = new ConnectionCRM("core.service.acc@olimpico.biz", "LS1setup!!", "https://iocdwtest2.crm4.dynamics.com/", "0ce3de8a-9ee5-4dd6-8a3f-2b9a208634cc", "https://localhost", "Z139u@]Ns/?JvYJWm3H2ZiLWJQ+=ee6Y");
         DisplayErr Err = new DisplayErr();
-            
-        //Prog de test
-        public string Lance()
-        {
-            //Déclare une nouvelle requete
-            ReqAPI ReqContact = new ReqAPI();
-            try
-            {
-                //Ouvre la connexion
-                Task.WaitAll(Task.Run(async () => await RunAsync(ReqContact)));
-            }
-            catch (System.Exception ex) { Err.DisplayException(ex); }
-            finally
-            {
-                if (Co.GetHTTPClient() != null)
-                {
-                    Co.Déconnecte();
-                }
-            }
-
-            Console.WriteLine(Contacts.GetPerson[0].m_firstname);
-            Console.WriteLine(Contacts.GetPerson[1].m_firstname);
-            Console.WriteLine(Contacts.GetPerson[2].m_firstname);
-            Console.ReadKey();
-
-            return (Contacts.GetPerson[0].m_firstname);
-        }
-
-        //Appel les requetes en Asynk
-        public async Task RunAsync(ReqAPI Client)
-        {
-            try
-            {
-                Contacts = await Client.GetContact(Co); // Sending a request
-            }
-            catch (Exception ex)
-            { Err.DisplayException(ex); }
-        }
 
         //Main
         static public void Main(string[] args)
         {
             Toto app = new Toto();
+            ConnectionCRM Co = new ConnectionCRM("core.service.acc@olimpico.biz", "LS1setup!!", "https://iocdwtest2.crm4.dynamics.com/", "0ce3de8a-9ee5-4dd6-8a3f-2b9a208634cc", "https://localhost", "Z139u@]Ns/?JvYJWm3H2ZiLWJQ+=ee6Y");
 
-            app.RecupConfig();
-            app.Lance();
+            Task.WaitAll(Task.Run(async () => await app.Noc(Co)));
+            Task.WaitAll(Task.Run(async () => await app.Membre(Co)));
+            Task.WaitAll(Task.Run(async () => await app.Federation(Co)));
+            Task.WaitAll(Task.Run(async () => await app.Commission(Co)));
+
+            Console.ReadKey();
         }
 
+
         //Lance la récupération pour la connexion au serveur
-        public void RecupConfig()
+        public void RecupConfig(ConnectionCRM Co)
         {
             Co.ConnectToCRM(Err);
+        }
+
+        //Test NOC
+        public async Task Noc(ConnectionCRM Co)
+        {
+            LanceRequete requete = new LanceRequete();
+            RecupConfig(Co);
+            ListNOC ListNoc = new ListNOC();
+            ListNoc = await requete.LanceNOC(Err, Co);
+
+            if (ListNoc != null)
+            {
+                Console.WriteLine("NOC OK");
+            }
+            else
+            {
+                Console.WriteLine("Nul");
+            }
+        }
+
+        //Test Membre
+        public async Task Membre(ConnectionCRM Co)
+        {
+            LanceRequete requete = new LanceRequete();
+            ListMember ListMember = new ListMember();
+            RecupConfig(Co);
+            ListMember = await requete.LanceMember(Err, Co);
+
+            if (ListMember != null)
+            {
+                Console.WriteLine("Membre OK");
+            }
+            else
+            {
+                Console.WriteLine("Nul");
+            }
+        }
+
+        //Test Fédé
+        public async Task Federation(ConnectionCRM Co)
+        {
+            LanceRequete requete = new LanceRequete();
+            ListFederation ListFede = new ListFederation();
+            RecupConfig(Co);
+            ListFede = await requete.LanceFederation(Err, Co);
+
+            if (ListFede != null)
+            {
+                Console.WriteLine("Fede OK");
+            }
+            else
+            {
+                Console.WriteLine("Nul");
+            }
+        }
+
+        //test Commi
+        public async Task Commission(ConnectionCRM Co)
+        {
+            LanceRequete requete = new LanceRequete();
+            ListCommission ListCom = new ListCommission();
+            RecupConfig(Co);
+            ListCom = await requete.LanceCommission(Err, Co);
+
+            if (ListCom != null)
+            {
+                Console.WriteLine("Commission OK");
+            }
+            else
+            {
+                Console.WriteLine("Nul");
+            }
         }
     }
 }

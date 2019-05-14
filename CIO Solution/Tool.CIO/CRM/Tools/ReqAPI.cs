@@ -42,31 +42,7 @@ namespace Tool.CIO.CRM.Tools
             }
         }
 
-        //Récup Susan Burk
-        public async Task<ListContact> GetContactTest(ConnectionCRM Co)
-        {
-            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "ioc_roles?userQuery=00000000-0000-0000-00aa-000010001899");
-
-            // wait for send a request
-            RetrieveGetReponse = await Co.GetHTTPClient().SendAsync(RetrieveGetRequest);
-
-            if (RetrieveGetReponse.IsSuccessStatusCode) // if 200, successfully 
-            {
-                //Translate a Content of Request Response to Json Object
-                JObject ReponseContacts = JsonConvert.DeserializeObject<JObject>(await RetrieveGetReponse.Content.ReadAsStringAsync());
-
-                // Store values choise in ListContact with JsonProperty in a member value of contacts
-                ListContact result = JsonConvert.DeserializeObject<ListContact>(ReponseContacts.ToString());
-
-                //Retourne la liste
-                return (result);
-            }
-            else
-            {
-                Console.WriteLine("Echec Récup Contact : {0}", RetrieveGetReponse.ReasonPhrase);
-                throw new CrmHttpResponseException(RetrieveGetReponse.Content);
-            }
-        }
+        
 
 
     }

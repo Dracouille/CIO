@@ -105,12 +105,10 @@
     <Compile Include="CRM\Connect\Exceptions.cs" />
     <Compile Include="CRM\Tools\Commission.cs" />
     <Compile Include="CRM\Tools\Federation.cs" />
+    <Compile Include="CRM\Tools\LanceRequete.cs" />
     <Compile Include="CRM\Tools\Member.cs" />
     <Compile Include="CRM\Tools\NOC.cs" />
     <Compile Include="Log\DisplayErr.cs" />
-    <Compile Include="CRM\Tools\Prog.cs" />
-    <Compile Include="CRM\Tools\Contact.cs" />
-    <Compile Include="CRM\Tools\ReqAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

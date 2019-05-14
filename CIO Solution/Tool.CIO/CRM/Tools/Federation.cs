@@ -1,88 +1,60 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Tool.CIO.CRM.Connect;
 
 namespace Tool.CIO.CRM.Tools
 {
     public class Federation
     {
-        [JsonProperty(PropertyName = "_EVENTID")]
-        public long m_EventID { get; set; }
-
-        [JsonProperty(PropertyName = "_TYPE")]
-        public string m_Type { get; set; }
-
-        [JsonProperty(PropertyName = "_LNG")]
-        public decimal m_LNG { get; set; }
-
-        [JsonProperty(PropertyName = "IDIOCDF")]
-        public long m_IDIOCDF { get; set; }
-
-        [JsonProperty(PropertyName = "Initials")]
-        public string m_Initials { get; set; }
-
-        [JsonProperty(PropertyName = "Name")]
+        [JsonProperty(PropertyName = "name")]
         public string m_Name { get; set; }
 
-        [JsonProperty(PropertyName = "IdentityCardAddress")]
-        public string m_IdentityCardAddress { get; set; }
+        [JsonProperty(PropertyName = "ioc_acronymen")]
+        public string m_Initials { get; set; }
 
-        [JsonProperty(PropertyName = "IdentityCardPhone")]
-        public string m_IdentityCardPhone { get; set; }
-
-        [JsonProperty(PropertyName = "IdentityCardFax")]
-        public string m_IdentityCardFax { get; set; }
-
-        [JsonProperty(PropertyName = "IDENTITYCARDEMAIL_LINKURL")]
-        public string m_IDENTITYCARDEMAIL_LINKURL { get; set; }
-
-        [JsonProperty(PropertyName = "IdentityCardEmail")]
-        public string m_IdentityCardEmail { get; set; }
-
-        [JsonProperty(PropertyName = "IDENTITYCARDEMAIL_LINKTOOLTIP")]
-        public string m_IDENTITYCARDEMAIL_LINKTOOLTIP { get; set; }
-
-        [JsonProperty(PropertyName = "IDENTITYCARDWEBSITE_LINKTEXT")]
-        public string m_IDENTITYCARDWEBSITE_LINKTEXT { get; set; }
-
-        [JsonProperty(PropertyName = "IdentityCardWebsite")]
-        public string m_IdentityCardWebsite { get; set; }
-
-        [JsonProperty(PropertyName = "IDENTITYCARDWEBSITE_LINKTOOLTIP")]
-        public string m_IDENTITYCARDWEBSITE_LINKTOOLTIP { get; set; }
-
-        [JsonProperty(PropertyName = "FoundationDate")]
+        [JsonProperty(PropertyName = "ioc_foundingdateorg")]
         public string m_FoundationDate { get; set; }
 
-        [JsonProperty(PropertyName = "NbOfAffiliates")]
+        [JsonProperty(PropertyName = "ioc_noaffiliatednif")]
         public int m_NbOfAffiliates { get; set; }
 
-        [JsonProperty(PropertyName = "FEDERATIONLOGOIMAGE_IMAGETITLE")]
-        public string m_FEDERATIONLOGOIMAGE_IMAGETITLE { get; set; }
+        [JsonProperty(PropertyName = "websiteurl")]
+        public string m_WebSite { get; set; }
 
-        [JsonProperty(PropertyName = "FEDERATIONLOGOIMAGE_ALTTEXT")]
-        public string m_FEDERATIONLOGOIMAGE_ALTTEXT { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdressbuildingname")]
+        public string m_AddressBuilding { get; set; }
 
-        [JsonProperty(PropertyName = "LogoUrl")]
-        public string m_LogoUrl { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdressstreet")]
+        public string m_AdressStreet { get; set; }
 
-        [JsonProperty(PropertyName = "SportCode")]
-        public string m_SportCode { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdresspostalcode")]
+        public string m_AdressPostalCode { get; set; }
 
-        [JsonProperty(PropertyName = "SPORTNAME")]
-        public string m_SPORTNAME { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdresscity")]
+        public string m_AdressCity { get; set; }
 
-        [JsonProperty(PropertyName = "__SPO")]
-        public string m_SPO { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdressstate")]
+        public string m_AdressState { get; set; }
 
-        [JsonProperty(PropertyName = "PAGEID")]
-        public ulong m_PAGEID { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdressstateinitial")]
+        public string m_AdressStateInitial { get; set; }
 
-        [JsonProperty(PropertyName = "PAGEGUID")]
-        public int m_PAGEGUID { get; set; }
+        [JsonProperty(PropertyName = "ioc_entitynamefr")]
+        public string m_NameFR { get; set; }
+
+        [JsonProperty(PropertyName = "ioc_proftel1")]
+        public string m_Telephone { get; set; }
+
+        [JsonProperty(PropertyName = "emailaddress1")]
+        public string m_Mail { get; set; }
+
+        //AccountID, _ioc_postaladdresscountryid_value, _ioc_sportid_value, @odata.etag ??
     }
 
     public class ListFederation
@@ -94,5 +66,40 @@ namespace Tool.CIO.CRM.Tools
         // use another object for catch just somes values in a list of feature "LIST" allows to call this member with a foreach loop
         [JsonProperty(PropertyName = "value")]
         public List<Federation> GetFederation { get; set; }
+    }
+    
+
+    public class ReqFederation
+    {
+        private HttpRequestMessage RetrieveGetRequest;
+        private HttpResponseMessage RetrieveGetReponse;
+
+        //Récup les contacts
+        public async Task<ListFederation> GetFederation(ConnectionCRM Co)
+        {
+            // Requete des fédérations
+            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "accounts?userQuery=48cd60b8-5875-e911-a81f-000d3a47cb1d");
+
+            // Attend la reception
+            RetrieveGetReponse = await Co.GetHTTPClient().SendAsync(RetrieveGetRequest);
+
+            if (RetrieveGetReponse.IsSuccessStatusCode) // if 200, successfully 
+            {
+                //Translate a Content of Request Response to Json Object
+                JObject ReponseContacts = JsonConvert.DeserializeObject<JObject>(await RetrieveGetReponse.Content.ReadAsStringAsync());
+
+                // Store values choise in ListFederation with JsonProperty in a member value of contacts
+                ListFederation result = JsonConvert.DeserializeObject<ListFederation>(ReponseContacts.ToString());
+
+                //Retourne la liste
+                return (result);
+            }
+            else
+            {
+                //LOG
+                Console.WriteLine("Echec Récup Fédérations : {0}", RetrieveGetReponse.ReasonPhrase);
+                throw new CrmHttpResponseException(RetrieveGetReponse.Content);
+            }
+        }
     }
 }

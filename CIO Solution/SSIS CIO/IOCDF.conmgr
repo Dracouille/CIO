@@ -1,0 +1,15 @@
+﻿<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="IOCDF"
+  DTS:DTSID="{7FCDB104-FF1E-4D0F-860F-5F22D46BEB36}"
+  DTS:CreationName="OLEDB">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:Retain="True"
+      DTS:ConnectionString="Data Source=sql-ioc-sitecore-dev.francecentral.cloudapp.azure.com;User ID=SitecoreDev;Initial Catalog=IOCDF;Provider=SQLOLEDB.1;Persist Security Info=True;Auto Translate=False;Application Name=SSIS-SSIS-{7FCDB104-FF1E-4D0F-860F-5F22D46BEB36}http://10.66.52.65.cloud.betd\rdouville;">
+      <DTS:Password
+        DTS:Name="Password"
+        Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA2/hVrcwWUk+Zyol2YrG5bQAAAAACAAAAAAADZgAAwAAAABAAAAC7Sc1U/M8sNAq7sXbeRxEgAAAAAASAAACgAAAAEAAAAMwytbv0K0rh922C9Q5vjQSAAAAA6GrirEWdi2rdvnBUho9IUqsyA7ay6FQTrbxlr6iVSDsIu/MeK6pzUAyhQIqk9RKTMlhIkgYeRnZqqUoj1I152yQSIG+rF0HvJtWznkXyitdyCKen7/vxrv4a6L0woDnZZ1Q/vNjVkqkk7o2xD5BBWZ2his5f3gTXiY3vu9m2sdkUAAAAiHHUf5i5KajJcD4iW137K2+ml4Q=</DTS:Password>
+    </DTS:ConnectionManager>
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

@@ -1,9 +1,12 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Tool.CIO.CRM.Connect;
 
 namespace Tool.CIO.CRM.Tools
 {
@@ -115,5 +118,39 @@ namespace Tool.CIO.CRM.Tools
         // use another object for catch just somes values in a list of feature "LIST" allows to call this member with a foreach loop
         [JsonProperty(PropertyName = "value")]
         public List<Member> GetMember { get; set; }
+    }
+
+    public class ReqMember
+    {
+        private HttpRequestMessage RetrieveGetRequest;
+        private HttpResponseMessage RetrieveGetReponse;
+
+        //Récup les contacts
+        public async Task<ListMember> GetMember(ConnectionCRM Co)
+        {
+            // Requete des NOC
+            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "ioc_roles?userQuery=2194bf98-7975-e911-a81f-000d3a47c97c");
+
+            // Attend la reception
+            RetrieveGetReponse = await Co.GetHTTPClient().SendAsync(RetrieveGetRequest);
+
+            if (RetrieveGetReponse.IsSuccessStatusCode) // if 200, successfully 
+            {
+                //Translate a Content of Request Response to Json Object
+                JObject ReponseContacts = JsonConvert.DeserializeObject<JObject>(await RetrieveGetReponse.Content.ReadAsStringAsync());
+
+                // Store values choise in ListMember with JsonProperty in a member value of contacts
+                ListMember result = JsonConvert.DeserializeObject<ListMember>(ReponseContacts.ToString());
+
+                //Retourne la liste
+                return (result);
+            }
+            else
+            {
+                //LOG
+                Console.WriteLine("Echec Récup Members : {0}", RetrieveGetReponse.ReasonPhrase);
+                throw new CrmHttpResponseException(RetrieveGetReponse.Content);
+            }
+        }
     }
 }
