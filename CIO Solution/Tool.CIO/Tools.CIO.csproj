@@ -108,7 +108,9 @@
     <Compile Include="CRM\Tools\LanceRequete.cs" />
     <Compile Include="CRM\Tools\Member.cs" />
     <Compile Include="CRM\Tools\NOC.cs" />
+    <Compile Include="CRM\Tools\Utile.cs" />
     <Compile Include="Log\DisplayErr.cs" />
+    <Compile Include="Log\GestionLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

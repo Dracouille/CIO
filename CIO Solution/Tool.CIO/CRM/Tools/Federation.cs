@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -15,7 +16,7 @@ namespace Tool.CIO.CRM.Tools
         [JsonProperty(PropertyName = "name")]
         public string m_Name { get; set; }
 
-        [JsonProperty(PropertyName = "ioc_acronymen")]
+        [JsonProperty(PropertyName = "ioc_acronymfr")]
         public string m_Initials { get; set; }
 
         [JsonProperty(PropertyName = "ioc_foundingdateorg")]
@@ -54,6 +55,12 @@ namespace Tool.CIO.CRM.Tools
         [JsonProperty(PropertyName = "emailaddress1")]
         public string m_Mail { get; set; }
 
+        [JsonProperty(PropertyName = "ioc_postaladdressat")]
+        public string m_AddressAt { get; set; }
+
+        [JsonProperty(PropertyName = "ioc_postaladdressstreetcomplement")]
+        public string m_AddressComplement { get; set; }
+
         //AccountID, _ioc_postaladdresscountryid_value, _ioc_sportid_value, @odata.etag ??
     }
 
@@ -66,8 +73,55 @@ namespace Tool.CIO.CRM.Tools
         // use another object for catch just somes values in a list of feature "LIST" allows to call this member with a foreach loop
         [JsonProperty(PropertyName = "value")]
         public List<Federation> GetFederation { get; set; }
+
+        //Retourne String pour requete
+        public string GetFederationString()
+        {
+            string MaChaine = "";
+
+            //Forme la chaine
+            foreach (var Fede in GetFederation)
+            {
+                MaChaine += "('" +
+                    Fede.m_Initials + "','" +
+                    Fede.m_WebSite + "','" +
+                    Utile.SubDate(Fede.m_FoundationDate) + "','" +
+                    Utile.ConvertStringSQL(Fede.m_NameFR) + "','" +
+                    Utile.ConvertStringSQL(Fede.m_Name) + "','" +
+                    Fede.m_Telephone + "','" +
+                    Fede.m_Mail + "','" +
+                    Fede.m_AddressComplement + "','" +
+                    Fede.m_AdressStreet + "','" +
+                    Fede.m_AddressBuilding + "','" +
+                    Fede.m_AdressCity + "','" +
+                    Fede.m_AdressPostalCode + "','" +
+                    Fede.m_AdressState + "','" +
+                    Fede.m_AdressStateInitial + "','" +
+                    Fede.m_AddressAt
+                    + "'),";
+            }
+
+            //Supp la derniere virgule
+            MaChaine = MaChaine.Substring(0, MaChaine.Length - 1);
+
+            //return Chaine
+            return MaChaine;
+        }
+
+        //Forme la date en année
+        public string SubDate(string DateComplet)
+        {
+            if (string.IsNullOrEmpty(DateComplet))
+            {
+                return "";
+            }
+            else
+            {
+                return DateComplet.Substring(0, 4);
+            }
+        }
     }
-    
+
 
     public class ReqFederation
     {
@@ -101,5 +155,21 @@ namespace Tool.CIO.CRM.Tools
                 throw new CrmHttpResponseException(RetrieveGetReponse.Content);
             }
         }
+
+        public ListFederation GetFederationLocal()
+        {
+
+            string MesFede = File.ReadAllText(@"C:\Users\adamerval\source\repos\CIO\CIO Solution\Tool.CIO\Fede.json", Encoding.UTF8);
+
+            //Translate a Content of Request Response to Json Object
+            JObject ReponseContacts = JsonConvert.DeserializeObject<JObject>(MesFede);
+
+            // Store values choise in ListFederation with JsonProperty in a member value of contacts
+            ListFederation result = JsonConvert.DeserializeObject<ListFederation>(ReponseContacts.ToString());
+
+            //Retourne la liste
+            return (result);
+        }
     }
+
 }

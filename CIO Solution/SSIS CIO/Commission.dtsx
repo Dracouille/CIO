@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="5/9/2019 2:04:39 PM"
@@ -12,7 +12,7 @@
   DTS:ObjectName="Commission"
   DTS:PackageType="5"
   DTS:VersionBuild="1"
-  DTS:VersionGUID="{D123087E-FD6B-4229-803B-18B5D1D69616}">
+  DTS:VersionGUID="{D656B067-A1C0-474A-8A88-7ACDF81CA576}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />

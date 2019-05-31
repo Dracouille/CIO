@@ -11,18 +11,22 @@ namespace Tool.CIO.CRM.Tools
 {
     public class LanceRequete
     {
-        //ConnectionCRM Co = new ConnectionCRM("core.service.acc@olimpico.biz", "LS1setup!!", "https://iocdwtest2.crm4.dynamics.com/", "0ce3de8a-9ee5-4dd6-8a3f-2b9a208634cc", "https://localhost", "Z139u@]Ns/?JvYJWm3H2ZiLWJQ+=ee6Y");
-        //DisplayErr Err = new DisplayErr();
 
+        //Var
+        ListMember listMember { set;get;}
+        ListNOC listNOC { set;get;}
+        ListCommission listCom { set;get;}
+        ListFederation listFed { set;get;}
+
+        #region ReqAsync
         //Lance la requete pour recupere les NOC
         public async Task<ListNOC> LanceNOC(DisplayErr Err, ConnectionCRM Co)
         {
-            ListNOC ListNoc = new ListNOC();
             ReqNOC Reqnoc = new ReqNOC();
 
             try
             {
-                ListNoc = await Reqnoc.GetNOC(Co);
+                listNOC = await Reqnoc.GetNOC(Co);
             }
             catch (System.Exception ex) { Err.DisplayException(ex); }
             finally
@@ -32,18 +36,17 @@ namespace Tool.CIO.CRM.Tools
                     Co.Déconnecte();
                 }
             }
-            return ListNoc;
+            return listNOC;
         }
 
         //Lance la requete pour recupere les Member
         public async Task<ListMember> LanceMember(DisplayErr Err, ConnectionCRM Co)
         {
             ReqMember ReqMem = new ReqMember();
-            ListMember ListMember = new ListMember();
 
             try
             {
-                ListMember = await ReqMem.GetMember(Co);
+                listMember = await ReqMem.GetMember(Co);
             }
             catch (System.Exception ex) { Err.DisplayException(ex); }
             finally
@@ -53,18 +56,17 @@ namespace Tool.CIO.CRM.Tools
                     Co.Déconnecte();
                 }
             }
-            return ListMember;
+            return listMember;
         }
 
         //Lance la requete pour recupere les Member
         public async Task<ListCommission> LanceCommission(DisplayErr Err, ConnectionCRM Co)
         {
-            ListCommission ListCom = new ListCommission();
             ReqCommission ReqCom = new ReqCommission();
 
             try
             {
-                ListCom = await ReqCom.GetCommission(Co);
+                listCom = await ReqCom.GetCommission(Co);
             }
             catch (System.Exception ex) { Err.DisplayException(ex); }
             finally
@@ -74,18 +76,17 @@ namespace Tool.CIO.CRM.Tools
                     Co.Déconnecte();
                 }
             }
-            return ListCom;
+            return listCom;
         }
 
         //Lance la requete pour recupere les Member
         public async Task<ListFederation> LanceFederation(DisplayErr Err, ConnectionCRM Co)
         {
-            ListFederation ListFede = new ListFederation();
             ReqFederation ReqFede = new ReqFederation();
 
             try
             {
-                ListFede = await ReqFede.GetFederation(Co);
+                listFed = await ReqFede.GetFederation(Co);
             }
             catch (System.Exception ex) { Err.DisplayException(ex); }
             finally
@@ -95,7 +96,63 @@ namespace Tool.CIO.CRM.Tools
                     Co.Déconnecte();
                 }
             }
-            return ListFede;
+            return listFed;
         }
+        #endregion
+
+        #region Accesseur Async
+
+        public ListMember GetResMember(DisplayErr Err, ConnectionCRM Co)
+        {
+            try
+            {
+                Task.WaitAll(Task.Run(async () => await LanceMember(Err, Co)));
+            }
+            catch (System.Exception ex) {
+                Err.DisplayException(ex);
+            }
+            return (listMember);
+        }
+
+        public ListNOC GetResNOC(DisplayErr Err, ConnectionCRM Co)
+        {
+            try
+            {
+                Task.WaitAll(Task.Run(async () => await LanceNOC(Err, Co)));
+            }
+            catch (System.Exception ex)
+            {
+                Err.DisplayException(ex);
+            }
+            return (listNOC);
+        }
+
+        public ListCommission GetResCommi(DisplayErr Err, ConnectionCRM Co)
+        {
+            try
+            {
+                Task.WaitAll(Task.Run(async () => await LanceCommission(Err, Co)));
+            }
+            catch (System.Exception ex)
+            {
+                Err.DisplayException(ex);
+            }
+            return (listCom);
+        }
+
+        public ListFederation GetResFede(DisplayErr Err, ConnectionCRM Co)
+        {
+            try
+            {
+                Task.WaitAll(Task.Run(async () => await LanceFederation(Err, Co)));
+            }
+            catch (System.Exception ex)
+            {
+                Err.DisplayException(ex);
+            }
+            return (listFed);
+        }
+
+        #endregion
     }
 }

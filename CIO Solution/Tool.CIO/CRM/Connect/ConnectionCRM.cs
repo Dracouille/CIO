@@ -46,7 +46,7 @@ namespace Tool.CIO.CRM.Connect
         //récupere la version de l'api
         public async Task ReqApiVersion(HttpClient httpClient)
         {
-            HttpRequestMessage RetrieveVersionRequest = new HttpRequestMessage(HttpMethod.Get, getVersionAPI() + "RetrieveVersion");
+            HttpRequestMessage RetrieveVersionRequest = new HttpRequestMessage(HttpMethod.Get, getVersionAPI() + "RetrieveVersion()");
 
             HttpResponseMessage RetrieveVersionResponse = await httpClient.SendAsync(RetrieveVersionRequest);
             if (RetrieveVersionResponse.StatusCode == HttpStatusCode.OK)  //200
@@ -88,7 +88,7 @@ namespace Tool.CIO.CRM.Connect
         #region Methode
         //Connection au CRM
         public void ConnectToCRM(DisplayErr Err)
-        {
+         {
             //Décla de la Config
             Configuration config = null;
 
@@ -100,6 +100,7 @@ namespace Tool.CIO.CRM.Connect
             //Décla Auth, use a HttpClient object to connect to specified CRM Web service.
             Authentication auth = new Authentication(config);
             httpClient = new HttpClient(auth.ClientHandler, true);
+            
 
             //Define the Web API base address, the max period of execute time, the 
             // default OData version, and the default response payload format.

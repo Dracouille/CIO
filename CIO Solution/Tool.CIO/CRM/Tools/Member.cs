@@ -12,101 +12,38 @@ namespace Tool.CIO.CRM.Tools
 {
     public class Member
     {
-        [JsonProperty(PropertyName = "_EVENTID")]
-        public long m_EventID { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdresscity")]
+        public string m_AdressCity { get; set; }
 
-        [JsonProperty(PropertyName = "_TYPE")]
-        public string m_Type { get; set; }
+        [JsonProperty(PropertyName = "ioc_postaladdresspostalcode")]
+        public string m_AdressPostalCode { get; set; }
 
-        [JsonProperty(PropertyName = "_LNG")]
-        public decimal m_LNG { get; set; }
+        [JsonProperty(PropertyName = "ioc_functionfreefield")]
+        public string m_FunctionFree { get; set; }
 
-        [JsonProperty(PropertyName = "IDIOCDF")]
-        public long m_IDIOCDF { get; set; }
+        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_firstname")]
+        public string m_FirstName { get; set; }
 
-        [JsonProperty(PropertyName = "RccId")]
-        public int m_RccId { get; set; }
+        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_ioc_fullnamefr")]
+        public string m_FullNameFR{ get; set; }
 
-        [JsonProperty(PropertyName = "PAGETITLE")]
-        public string m_PAGETITLE { get; set; }
+        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_ioc_biographyfr")]
+        public string m_BiographieFR { get; set; }
 
-        [JsonProperty(PropertyName = "Title")]
-        public string m_Title { get; set; }
+        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_lastname")]
+        public string m_LastName { get; set; }
 
-        [JsonProperty(PropertyName = "Name")]
-        public string m_Name { get; set; }
+        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_ioc_biographyen")]
+        public string m_BiographieEN { get; set; }
 
-        [JsonProperty(PropertyName = "lastname")]
-        public string m_lastname { get; set; }
+        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_ioc_fullnameen")]
+        public string m_FullNameEN { get; set; }
 
-        [JsonProperty(PropertyName = "MEMBERPHOTO_IMAGEURL")]
-        public string m_MEMBERPHOTO_IMAGEURL { get; set; }
+        [JsonProperty(PropertyName = "func_x002e_ioc_name")]
+        public string m_IOCName { get; set; }
 
-        [JsonProperty(PropertyName = "MEMBERPHOTO_ALTTEXT")]
-        public string m_MEMBERPHOTO_ALTTEXT { get; set; }
-
-        [JsonProperty(PropertyName = "MEMBERPHOTO_IMAGETITLE")]
-        public string m_MEMBERPHOTO_IMAGETITLE { get; set; }
-
-        [JsonProperty(PropertyName = "EntryYear")]
-        public uint m_EntryYear { get; set; }
-
-        [JsonProperty(PropertyName = "ExitYear")]
-        public uint m_ExitYear { get; set; }
-
-        [JsonProperty(PropertyName = "NOCInitials")]
-        public string m_NOCInitials { get; set; }
-
-        [JsonProperty(PropertyName = "MEMBERCOUNTRY")]
-        public string m_MEMBERCOUNTRY { get; set; }
-
-        [JsonProperty(PropertyName = "IsAnExecutiveBoardMember")]
-        public string m_IsAnExecutiveBoardMember { get; set; }
-
-        [JsonProperty(PropertyName = "ISIOCMEMBER")]
-        public int m_ISIOCMEMBER { get; set; }
-
-        [JsonProperty(PropertyName = "IsAnActiveIOCMember")]
-        public string m_IsAnActiveIOCMember { get; set; }
-
-        [JsonProperty(PropertyName = "IsAnIOCMember")]
-        public string m_IsAnIOCMember { get; set; }
-
-        [JsonProperty(PropertyName = "IsAHonoraryIOCMember")]
-        public string m_IsAHonoraryIOCMember { get; set; }
-
-        [JsonProperty(PropertyName = "IsAHonorIOCMember")]
-        public string m_IsAHonorIOCMember { get; set; }
-
-        [JsonProperty(PropertyName = "IsAMedallist")]
-        public string m_IsAMedallist { get; set; }
-
-        [JsonProperty(PropertyName = "IsAnOlympian")]
-        public string m_IsAnOlympian { get; set; }
-
-        [JsonProperty(PropertyName = "PARTICIPATIONYEARS")]
-        public string m_PARTICIPATIONYEARS { get; set; }
-
-        [JsonProperty(PropertyName = "ProtocolOrder")]
-        public byte m_ProtocolOrder { get; set; }
-
-        [JsonProperty(PropertyName = "Birthdate")]
-        public DateTime m_Birthdate { get; set; }
-
-        [JsonProperty(PropertyName = "BirthLocation")]
-        public string m_BirthLocation { get; set; }
-
-        [JsonProperty(PropertyName = "__NOC")]
-        public string m_NOC { get; set; }
-
-        [JsonProperty(PropertyName = "Description")]
-        public string m_Description { get; set; }
-
-        [JsonProperty(PropertyName = "PAGEID")]
-        public ulong m_PAGEID { get; set; }
-
-        [JsonProperty(PropertyName = "PAGEGUID")]
-        public int m_PAGEGUID { get; set; }
+        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_birthdate")]
+        public string m_DateNaissance { get; set; }
     }
 
     public class ListMember

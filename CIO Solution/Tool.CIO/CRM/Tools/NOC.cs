@@ -2,7 +2,9 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Tool.CIO.CRM.Connect;
 
@@ -43,6 +45,9 @@ namespace Tool.CIO.CRM.Tools
         [JsonProperty(PropertyName = "ioc_postaladdressstateinitial")]
         public string m_AdressStateInitial { get; set; }
 
+        [JsonProperty(PropertyName = "ioc_postaladdressat")]
+        public string m_AdressAt { get; set; }
+
         [JsonProperty(PropertyName = "ioc_proftel1")]
         public string m_NOCTelephone { get; set; }
 
@@ -70,6 +75,44 @@ namespace Tool.CIO.CRM.Tools
         // use another object for catch just somes values in a list of feature "LIST" allows to call this member with a foreach loop
         [JsonProperty(PropertyName = "value")]
         public List<NOC> GetNOC { get; set; }
+
+        //Retourne String pour requete d'insert
+        public string GetNocString()
+        {
+            string MaChaine = "";
+
+            //Forme la chaine
+            foreach (var Noc in GetNOC)
+            {
+                MaChaine += "('" +
+                    Noc.m_NOCCode + "','" +
+                    Utile.ConvertStringSQL(Noc.m_NameFR) + "','" +
+                    Utile.ConvertStringSQL(Noc.m_Name) + "','" +
+                    Noc.m_NOCWebsite + "','" +
+                    Utile.SubDate(Noc.m_CreationDate) + "','" +
+                    Utile.SubDate(Noc.m_RecognitionDate) + "','" +
+                    Noc.m_Emblem + "','" +
+                    Noc.m_NOCTelephone + "','" +
+                    Noc.m_NOCFax + "','" +
+                    Utile.ConvertStringSQL(Noc.m_AdressCity) + "','" +
+                    Utile.ConvertStringSQL(Noc.m_AdressStreet) + "','" +
+                    Utile.ConvertStringSQL(Noc.m_AddressBuilding) + "','" +
+                    Utile.ConvertStringSQL(Noc.m_AdressComplement) + "','" +
+                    Noc.m_AdressPostalCode + "','" +
+                    Utile.ConvertStringSQL(Noc.m_AdressStateInitial) + "','" +
+                    Utile.ConvertStringSQL(Noc.m_AdressState) + "','" +
+                    Utile.ConvertStringSQL(Noc.m_AdressAt) 
+                    + "'),";
+            }
+
+            //Supp la derniere virgule
+            MaChaine = MaChaine.Substring(0, MaChaine.Length - 1);
+
+            //return Chaine
+            return MaChaine;
+        }
+
+        
     }
 
     public class ReqNOC
@@ -104,6 +147,21 @@ namespace Tool.CIO.CRM.Tools
                 Console.WriteLine("Echec Récup NOC : {0}", RetrieveGetReponse.ReasonPhrase);
                 throw new CrmHttpResponseException(RetrieveGetReponse.Content);
             }
+        }
+
+        public ListNOC GetNOCLocal()
+        {
+
+            string MesNoc = File.ReadAllText(@"C:\Users\adamerval\source\repos\CIO\CIO Solution\Tool.CIO\noc.json", Encoding.UTF8);
+
+            //Translate a Content of Request Response to Json Object
+            JObject ReponseContacts = JsonConvert.DeserializeObject<JObject>(MesNoc);
+
+            // Store values choise in ListNOC with JsonProperty in a member value of contacts
+            ListNOC result = JsonConvert.DeserializeObject<ListNOC>(ReponseContacts.ToString());
+
+            //Retourne la liste
+            return (result);
         }
     }
 
