@@ -63,6 +63,12 @@ namespace Tool.CIO.CRM.Tools
         [JsonProperty(PropertyName = "ioc_institutionalemblem")]
         public string m_Emblem { get; set; }
 
+        [JsonProperty(PropertyName = "ioc_President")]
+        public string m_President { get; set; }
+
+        [JsonProperty(PropertyName = "ioc_Secretaire")]
+        public string m_Secretaire { get; set; }
+
         //@odata.etag, accountid, _ioc_postaladdresscountryid_value ??
     }
 
@@ -121,11 +127,11 @@ namespace Tool.CIO.CRM.Tools
         private HttpResponseMessage RetrieveGetReponse;
 
         //Récup les contacts
-        public async Task<ListNOC> GetNOC(ConnectionCRM Co)
+        public async Task<ListNOC> GetNOC(ConnectionCRM Co, string sRequete)
         {
             // Requete des NOC
-            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "accounts?userQuery=6a9f7b9a-5675-e911-a81f-000d3a47cb1d");
-            //RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "accounts?$top=3");
+            //RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "accounts?userQuery=6a9f7b9a-5675-e911-a81f-000d3a47cb1d");
+            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + sRequete);
 
             // Attend la reception
             RetrieveGetReponse = await Co.GetHTTPClient().SendAsync(RetrieveGetRequest);

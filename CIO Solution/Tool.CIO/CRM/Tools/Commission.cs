@@ -57,10 +57,11 @@ namespace Tool.CIO.CRM.Tools
         private HttpResponseMessage RetrieveGetReponse;
 
         //Récup les contacts
-        public async Task<ListCommission> GetCommission(ConnectionCRM Co)
+        public async Task<ListCommission> GetCommission(ConnectionCRM Co, string sRequete)
         {
             // Requete des fédérations
-            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "ioc_roles?userQuery=5ed70282-5a75-e911-a81f-000d3a47cb1d");
+            //RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "ioc_roles?userQuery=5ed70282-5a75-e911-a81f-000d3a47cb1d");
+            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + sRequete);
 
             // Attend la reception
             RetrieveGetReponse = await Co.GetHTTPClient().SendAsync(RetrieveGetRequest);

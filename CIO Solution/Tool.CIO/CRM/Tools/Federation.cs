@@ -129,10 +129,10 @@ namespace Tool.CIO.CRM.Tools
         private HttpResponseMessage RetrieveGetReponse;
 
         //Récup les contacts
-        public async Task<ListFederation> GetFederation(ConnectionCRM Co)
+        public async Task<ListFederation> GetFederation(ConnectionCRM Co, string sRequete)
         {
             // Requete des fédérations
-            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "accounts?userQuery=48cd60b8-5875-e911-a81f-000d3a47cb1d");
+            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + sRequete);
 
             // Attend la reception
             RetrieveGetReponse = await Co.GetHTTPClient().SendAsync(RetrieveGetRequest);

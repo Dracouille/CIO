@@ -21,29 +21,32 @@ namespace Tool.CIO.CRM.Tools
         [JsonProperty(PropertyName = "ioc_functionfreefield")]
         public string m_FunctionFree { get; set; }
 
-        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_firstname")]
-        public string m_FirstName { get; set; }
-
-        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_ioc_fullnamefr")]
-        public string m_FullNameFR{ get; set; }
-
-        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_ioc_biographyfr")]
-        public string m_BiographieFR { get; set; }
-
-        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_lastname")]
-        public string m_LastName { get; set; }
-
-        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_ioc_biographyen")]
-        public string m_BiographieEN { get; set; }
-
-        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_ioc_fullnameen")]
-        public string m_FullNameEN { get; set; }
-
-        [JsonProperty(PropertyName = "func_x002e_ioc_name")]
+        [JsonProperty(PropertyName = "ab_x002e_name")]
         public string m_IOCName { get; set; }
 
-        [JsonProperty(PropertyName = "a_6a4728cfc070e911a81c000d3a47c8f5_x002e_birthdate")]
+        [JsonProperty(PropertyName = "ioc_entrydate")]
+        public string m_DateEntre { get; set; }
+
+        [JsonProperty(PropertyName = "ioc_enddate")]
+        public string m_DateSortit { get; set; }
+
+        [JsonProperty(PropertyName = "a_63cecba3a0c8e811a950000d3a441525_x002e_firstname")]
+        public string m_FirstName { get; set; }
+
+        [JsonProperty(PropertyName = "a_63cecba3a0c8e811a950000d3a441525_x002e_lastname")]
+        public string m_LastName { get; set; }
+
+        [JsonProperty(PropertyName = "a_63cecba3a0c8e811a950000d3a441525_x002e_ioc_fullnamefr")]
+        public string m_FullNameFR { get; set; }
+
+        [JsonProperty(PropertyName = "a_63cecba3a0c8e811a950000d3a441525_x002e_ioc_fullnameen")]
+        public string m_FullNameEN { get; set; }
+
+        [JsonProperty(PropertyName = "a_63cecba3a0c8e811a950000d3a441525_x002e_birthdate")]
         public string m_DateNaissance { get; set; }
+
+        [JsonProperty(PropertyName = "a_63cecba3a0c8e811a950000d3a441525_x002e_ioc_cityofbirth")]
+        public string m_BirthCity { get; set; }
     }
 
     public class ListMember
@@ -55,6 +58,34 @@ namespace Tool.CIO.CRM.Tools
         // use another object for catch just somes values in a list of feature "LIST" allows to call this member with a foreach loop
         [JsonProperty(PropertyName = "value")]
         public List<Member> GetMember { get; set; }
+
+        //Retourne String pour requete d'insert
+        public string GetMemberString()
+        {
+            string MaChaine = "";
+
+            //Forme la chaine
+            foreach (var Mem in GetMember)
+            {
+                MaChaine += "('" +
+                    Mem.m_LastName.ToUpper() + "','" +
+                    Mem.m_FirstName + "','" +
+                    Utile.SubDate(Mem.m_DateNaissance) + "','" +
+                    Utile.SubDate(Mem.m_DateEntre) + "','" +
+                    Utile.SubDate(Mem.m_DateSortit) + "','" +
+                    Mem.m_AdressCity + "','" +
+                    Utile.ConvertStringSQL(Utile.ExtractCivil(Mem.m_FullNameFR,Mem.m_FirstName)) + "','" +
+                    Utile.ConvertStringSQL(Utile.ExtractCivil(Mem.m_FullNameEN,Mem.m_FirstName)) + "','" +
+                    Mem.m_BirthCity 
+                    + "'),";
+            }
+
+            //Supp la derniere virgule
+            MaChaine = MaChaine.Substring(0, MaChaine.Length - 1);
+
+            //return Chaine
+            return MaChaine;
+        }
     }
 
     public class ReqMember
@@ -63,10 +94,10 @@ namespace Tool.CIO.CRM.Tools
         private HttpResponseMessage RetrieveGetReponse;
 
         //Récup les contacts
-        public async Task<ListMember> GetMember(ConnectionCRM Co)
+        public async Task<ListMember> GetMember(ConnectionCRM Co, string sRequete)
         {
             // Requete des NOC
-            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + "ioc_roles?userQuery=2194bf98-7975-e911-a81f-000d3a47c97c");
+            RetrieveGetRequest = new HttpRequestMessage(HttpMethod.Get, Co.getVersionAPI() + sRequete);
 
             // Attend la reception
             RetrieveGetReponse = await Co.GetHTTPClient().SendAsync(RetrieveGetRequest);

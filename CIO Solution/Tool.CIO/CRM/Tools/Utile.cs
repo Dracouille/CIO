@@ -32,6 +32,15 @@ namespace Tool.CIO.CRM.Tools
                 return DateComplet.Substring(0, 4);
             }
         }
+
+        //Extrait la Civité de la Chaine
+        public static string ExtractCivil(string FullName, string Prenom)
+        {
+            int IndexDebut = FullName.IndexOf(Prenom);
+            string Civilite = FullName.Substring(0, (IndexDebut-1));
+
+            return Civilite;
+        }
     }
 }
    

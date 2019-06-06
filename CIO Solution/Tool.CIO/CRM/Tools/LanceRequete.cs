@@ -18,6 +18,11 @@ namespace Tool.CIO.CRM.Tools
         ListCommission listCom { set;get;}
         ListFederation listFed { set;get;}
 
+        string sReqNoc = "accounts?savedQuery=f45ac9ad-6a80-e911-a967-000d3a441bb5";
+        string sReqMem = "ioc_roles?savedQuery=e4c58ddc-6880-e911-a967-000d3a441bb5";
+        string sReqCommission = "ioc_roles?savedQuery=08e051c2-6980-e911-a967-000d3a441bb5";
+        string sReqFédé = "accounts?savedQuery=28accd52-6a80-e911-a967-000d3a441bb5";
+
         #region ReqAsync
         //Lance la requete pour recupere les NOC
         public async Task<ListNOC> LanceNOC(DisplayErr Err, ConnectionCRM Co)
@@ -26,7 +31,7 @@ namespace Tool.CIO.CRM.Tools
 
             try
             {
-                listNOC = await Reqnoc.GetNOC(Co);
+                listNOC = await Reqnoc.GetNOC(Co, sReqNoc);
             }
             catch (System.Exception ex) { Err.DisplayException(ex); }
             finally
@@ -46,7 +51,7 @@ namespace Tool.CIO.CRM.Tools
 
             try
             {
-                listMember = await ReqMem.GetMember(Co);
+                listMember = await ReqMem.GetMember(Co, sReqMem);
             }
             catch (System.Exception ex) { Err.DisplayException(ex); }
             finally
@@ -66,7 +71,7 @@ namespace Tool.CIO.CRM.Tools
 
             try
             {
-                listCom = await ReqCom.GetCommission(Co);
+                listCom = await ReqCom.GetCommission(Co, sReqCommission);
             }
             catch (System.Exception ex) { Err.DisplayException(ex); }
             finally
@@ -86,7 +91,7 @@ namespace Tool.CIO.CRM.Tools
 
             try
             {
-                listFed = await ReqFede.GetFederation(Co);
+                listFed = await ReqFede.GetFederation(Co, sReqFédé);
             }
             catch (System.Exception ex) { Err.DisplayException(ex); }
             finally
